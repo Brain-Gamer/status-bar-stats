@@ -1,0 +1,28 @@
+{
+  "name": "status-bar-stats",
+  "main": "./lib/status-bar-stats",
+  "version": "0.0.0",
+  "description": "Display statistics of your current Project",
+  "keywords": [
+    "statistics",
+    "stats",
+    "statusbar"
+  ],
+  "activationCommands": {
+    "atom-workspace": "status-bar-stats:toggle"
+  },
+  "repository": "https://github.com/atom/status-bar-stats",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "dependencies": {
+  },
+  "consumedServices": {
+    "status-bar": {
+      "versions": {
+        "^1.0.0": "consumeStatusBar"
+      }
+    }
+  }
+}

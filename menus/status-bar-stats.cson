@@ -1,0 +1,20 @@
+# See https://atom.io/docs/latest/hacking-atom-package-word-count#menus for more details
+'context-menu':
+  'atom-text-editor': [
+    {
+      'label': 'Toggle Status-Bar Stats'
+      'command': 'status-bar-stats:toggle'
+    }
+  ]
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Status-Bar Stats'
+      'submenu': [
+        {'label': 'Toggle', 'command': 'status-bar-stats:toggle'}
+        {'label': 'Refresh', 'command': 'status-bar-stats:refresh'}
+      ]
+    ]
+  }
+]
