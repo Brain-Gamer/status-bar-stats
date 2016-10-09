@@ -3,56 +3,77 @@ StatusBarStatsView = require './status-bar-stats-view'
 
 module.exports = StatusBarStats =
 
+  config:
+    activateOnStart:
+      type: 'string'
+      default: 'Show on start'
+      enum: ['Show on start', 'Remember last setting', 'Don\'t show on start']
+    refreshRate:
+      type: 'integer'
+      default: 100
+      minimum: 1
+    enableFiles:
+      type: 'boolean'
+      default: true
+    enableLines:
+      type: 'boolean'
+      default: true
+    enableWords:
+      type: 'boolean'
+      default: true
+    enableCharacters:
+      type: 'boolean'
+      default: true
+
   active: false
-  statusBarStatsView: null
-  statusBar: null
-  subscriptions: null
 
   activate: (state) ->
-    @statusBarStatsView = new StatusBarStatsView(state.statusBarStatsViewState)
+    @state = state
 
-    # Events subscribed to in atom's system can be easily cleaned up with a CompositeDisposable
     @subscriptions = new CompositeDisposable
-
-    # Register commands
+    @statusBarStatsView = new StatusBarStatsView()
+    @statusBarStatsView.init()
+    # Register command that toggles this view
     @subscriptions.add atom.commands.add 'atom-workspace', 'status-bar-stats:toggle': => @toggle()
-    @subscriptions.add atom.commands.add 'atom-workspace', 'status-bar-stats:refresh': => @refresh()
+    @subscriptions.add atom.commands.add 'atom-workspace', 'status-bar-stats:restart': => @restart()
 
   deactivate: ->
-    @statusBarTile?.destroy()
-    @statusBarTile = null
+    console.log 'Stats were deactivated'
     @subscriptions.dispose()
     @statusBarStatsView.destroy()
+    @statusBarTile?.destroy()
 
-  serialize: ->
-    statusBarStatsViewState: @statusBarStatsView.serialize()
+  serialize:->
+    {
+      activateOnStart: atom.config.get('status-bar-stats.activateOnStart'),
+      active: @active
+    }
 
-  toggle: ->
-    console.log 'StatusBarStats was toggled!'
+  toggle: (active = undefined) ->
+    active = ! !!@active if !active?
 
-    if @active
-      @statusBarTile?.destroy()
-      @statusBarTile = null
-      @active = false
-    else
+    if active
+      console.log 'Stats were toggled on'
+      @statusBarStatsView.activate()
       @statusBarTile = @statusBar.addLeftTile
-        item: @statusBarStatsView, priority: 100
-      @refresh()
-      @active = true
+        item: @statusBarStatsView, priority: -1
+    else
+      @statusBarTile?.destroy()
+      @statusBarStatsView?.deactivate()
 
+    @active = active
 
-  refresh: ->
-    console.log 'StatusBarStats was refreshed!'
+  restart: ->
+    @toggle false
+    @toggle true
 
-    editor = atom.workspace.getActiveTextEditor()
-    text = editor.getText()
+  consumeStatusBar: (statusBar) ->
+    @statusBar = statusBar
+    # auto activate as soon as status bar activates based on configuration
+    @activateOnStart(@state)
 
-    files = 1
-    lines = text.split(/.+/g).length
-    words = text.split(/\w+/g).length
-    characters = text.split(/\S/g).length
-
-    @statusBarStatsView.count(files,lines,words,characters)
-
-    consumeStatusBar: (statusBar) ->
-      @statusBar = statusBar
+  activateOnStart: (state) ->
+    switch state.activateOnStart
+      when 'Remember last setting' then @toggle state.active
+      when 'Show on start' then @toggle true
+      else @toggle false

@@ -1,20 +1,55 @@
-module.exports =
-class StatusBarStatsView
-  constructor: (serializedState) ->
-    # Create root element
-    @element = document.createElement('div')
-    @element.classList.add('status-bar-stats')
-    @element.textContent = "Files: ? | Lines: ? | Words: ? | Characters: ?"
+class StatusBarStats extends HTMLElement
+  init: ->
+    @classList.add('status-bar-stats', 'inline-block')
+    @activate()
 
-  # Returns an object that can be retrieved when package is activated
-  serialize: ->
 
-  # Tear down any state and detach
-  destroy: ->
-    @element.remove()
+  activate: ->
+    @intervalId = setInterval @updateClock.bind(@), atom.config.get('status-bar-stats.refreshRate')
 
-  getElement: ->
-    @element
+  deactivate: ->
+    clearInterval @intervalId
 
-  count: (files, lines, words, characters) ->
-    @element.textContent = "Files: #{files} | Lines: #{lines} | Words: #{words} | Characters: #{characters}"
+  updateStats: ->
+    conf = atom.config
+    text = atom.workspace.getActiveTextEditor().getText()
+    display = ""
+
+    conf.set('status-bar-stats.enableFiles', false)
+
+    conf_files = conf.get('status-bar-stats.enableFiles')
+    conf_lines = conf.get('status-bar-stats.enableLines')
+    conf_words = conf.get('status-bar-stats.enableWords')
+    conf_characters = conf.get('status-bar-stats.enableCharacters')
+
+    if conf_files
+      files = 1
+      display = "#{display}Files: #{files}"
+
+    if conf_lines
+      lines = text.split(/.+/g).length
+      if !!display
+        display = "#{display} | Lines: #{lines}"
+      else
+        display = "#{display}Lines: #{lines}"
+
+    if conf_words
+      words = text.split(/\w+/g).length
+      if !!display
+        display = "#{display} | Words: #{words}"
+      else
+        display = "#{display}Words: #{words}"
+
+    if conf_characters
+      characters = text.split(/\S/g).length
+      if !!display
+        display = "#{display} | Characters: #{characters}"
+      else
+        display = "#{display}Characters: #{characters}"
+
+    display
+
+  updateClock: ->
+    @textContent = @updateStats()
+
+module.exports = document.registerElement('status-bar-stats', prototype: StatusBarStats.prototype, extends: 'div')

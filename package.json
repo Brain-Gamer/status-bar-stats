@@ -8,9 +8,6 @@
     "stats",
     "statusbar"
   ],
-  "activationCommands": {
-    "atom-workspace": "status-bar-stats:toggle"
-  },
   "repository": "https://github.com/atom/status-bar-stats",
   "license": "MIT",
   "engines": {
