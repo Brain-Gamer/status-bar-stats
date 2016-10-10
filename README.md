@@ -6,12 +6,12 @@ This package displays some statistics on the Status-Bar in atom
 
 ## Configuration
 
-You can easily change the delimiter between the statistics.   (Default:  "|"  )
-It's also very easy to enable or disable certain stats.       (Default: all on)
-The refreshing time of the stats is also a available setting. (Default: 100 ms)
+You can easily change the delimiter between the statistics.   (Default:  "|"  ) <br/>
+It's also very easy to enable or disable certain stats.       (Default: all on) <br/>
+The refreshing time of the stats is also a available setting. (Default: 100 ms) <br/>
 
 ## Planned
 
-Adding statistics for all files in you current project folder (switchable).
-Adding different colors for the statistics.
-Setting to change the position of the stats.
+Adding statistics for all files in you current project folder (switchable). <br/>
+Adding different colors for the statistics. <br/>
+Setting to change the position of the stats. <br/>
