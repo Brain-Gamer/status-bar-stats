@@ -11,47 +11,32 @@ class StatusBarStats extends HTMLElement
     clearInterval @intervalId
 
   updateStats: ->
-    conf = atom.config
     editor = atom.workspace.getActiveTextEditor()
     if editor?
       text = editor.getText()
-      display = ""
+      conf = atom.config.get('status-bar-stats')
+      display = []
 
-      conf.set('status-bar-stats.enableFiles', false)
-
-      conf_files = conf.get('status-bar-stats.enableFiles')
-      conf_lines = conf.get('status-bar-stats.enableLines')
-      conf_words = conf.get('status-bar-stats.enableWords')
-      conf_characters = conf.get('status-bar-stats.enableCharacters')
-
-      if conf_files
+      if conf.enableFiles
         files = 1
-        display = "#{display}Files: #{files}"
+        display.push "Files: #{files}"
 
-      if conf_lines
+      if conf.enableLines
         lines = text.split(/.+/g).length
-        if !!display
-          display = "#{display} | Lines: #{lines}"
-        else
-          display = "#{display}Lines: #{lines}"
+        display.push "Lines: #{lines}"
 
-      if conf_words
+      if conf.enableWords
         words = text.split(/\w+/g).length
-        if !!display
-          display = "#{display} | Words: #{words}"
-        else
-          display = "#{display}Words: #{words}"
+        display.push "Words: #{words}"
 
-      if conf_characters
+      if conf.enableCharacters
         characters = text.split(/\S/g).length
-        if !!display
-          display = "#{display} | Characters: #{characters}"
-        else
-          display = "#{display}Characters: #{characters}"
+        display.push "Characters: #{characters}"
 
-      display
+      display.join(" | ")
 
   updateClock: ->
+    atom.config.set('status-bar-stats.enableFiles', false)
     @textContent = @updateStats()
 
 module.exports = document.registerElement('status-bar-stats', prototype: StatusBarStats.prototype, extends: 'div')
