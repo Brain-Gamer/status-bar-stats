@@ -8,6 +8,9 @@ module.exports = StatusBarStats =
       type: 'string'
       default: 'Show on start'
       enum: ['Show on start', 'Remember last setting', 'Don\'t show on start']
+    delimiter:
+      type: 'string'
+      default: '|'
     refreshRate:
       type: 'integer'
       default: 100

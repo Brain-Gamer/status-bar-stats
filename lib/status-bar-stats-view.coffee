@@ -33,7 +33,7 @@ class StatusBarStats extends HTMLElement
         characters = text.split(/\S/g).length
         display.push "Characters: #{characters}"
 
-      display.join(" | ")
+      display.join(" #{conf.delimiter} ")
 
   updateClock: ->
     atom.config.set('status-bar-stats.enableFiles', false)
