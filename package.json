@@ -1,5 +1,5 @@
 {
-  "name": "Status-Bar",
+  "name": "Status-Bar Statistics",
   "main": "./lib/status-bar-stats",
   "version": "1.0.1",
   "description": "Display statistics of your current Project",
