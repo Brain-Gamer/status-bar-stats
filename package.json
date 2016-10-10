@@ -1,7 +1,7 @@
 {
   "name": "status-bar-stats",
   "main": "./lib/status-bar-stats",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Display statistics of your current Project",
   "keywords": [
     "statistics",
